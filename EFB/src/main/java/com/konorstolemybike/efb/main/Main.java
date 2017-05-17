@@ -14,6 +14,7 @@ public class Main {
         GateProvider gateProvider = new GateProvider();
         get("/hello", (req, res) -> "Hello");
         get("/availableGates", (req, res) -> gateProvider.getAvailableGates());
- 
+        post("/gate", (req, res) -> gateProvider.selectGate(new Gate(Integer.valueOf(req.queryParams("number")))));
     }
+    
 }

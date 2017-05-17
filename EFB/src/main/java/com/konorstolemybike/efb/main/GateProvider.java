@@ -10,12 +10,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import spark.Response;
 
 /**
  *
  * @author student
  */
 public class GateProvider {
+    
+    private Gate selectedGate;
     
     private final List<Gate> availableGates = IntStream
             .range(1, 45)
@@ -26,4 +29,13 @@ public class GateProvider {
         return availableGates;
     }
     
+    public boolean selectGate(Gate gate) {
+        if(!availableGates.contains(gate)){
+            return false;
+        } else {
+            availableGates.removeIf(g -> g.equals(gate));
+            selectedGate = gate;
+            return true;
+        }
+    }
 }
