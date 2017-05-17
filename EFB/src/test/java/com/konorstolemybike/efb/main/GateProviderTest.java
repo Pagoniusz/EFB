@@ -15,12 +15,12 @@ import static org.junit.Assert.*;
  */
 public class GateProviderTest {
     
-    public void shouldFreeGate() {
-        System.out.println("freeGate");
-        Gate gate = null;
-        GateProvider instance = new GateProvider();
-        instance.freeGate(gate);
-        // TODO review the generated test code and remove the default call to fail.
-    }
+    private final GateProvider gateProvider = new GateProvider();
     
+    @Test
+    public void shouldFreeGate() {
+        gateProvider.selectGate(new Gate(2));
+        gateProvider.freeGate(new Gate(2));
+        assertNull(gateProvider.getSelectedGate());
+    }
 }
