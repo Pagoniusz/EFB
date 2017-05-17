@@ -5,38 +5,49 @@ package com.konorstolemybike.efb.main;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import spark.Response;
 import static spark.Spark.*;
 
 public class Main {
-    
-    
+
     public static void main(String[] args) {
         options("/*",
-        (request, response) -> {
+                (request, response) -> {
 
-            String accessControlRequestHeaders = request
-                    .headers("Access-Control-Request-Headers");
-            if (accessControlRequestHeaders != null) {
-                response.header("Access-Control-Allow-Headers",
-                        accessControlRequestHeaders);
-            }
+                    String accessControlRequestHeaders = request
+                            .headers("Access-Control-Request-Headers");
+                    if (accessControlRequestHeaders != null) {
+                        response.header("Access-Control-Allow-Headers",
+                                accessControlRequestHeaders);
+                    }
 
-            String accessControlRequestMethod = request
-                    .headers("Access-Control-Request-Method");
-            if (accessControlRequestMethod != null) {
-                response.header("Access-Control-Allow-Methods",
-                        accessControlRequestMethod);
-            }
+                    String accessControlRequestMethod = request
+                            .headers("Access-Control-Request-Method");
+                    if (accessControlRequestMethod != null) {
+                        response.header("Access-Control-Allow-Methods",
+                                accessControlRequestMethod);
+                    }
 
-            return "OK";
-        });
+                    return "OK";
+                });
 
         before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
-        
+
         GateProvider gateProvider = new GateProvider();
         get("/hello", (req, res) -> "Hello");
         get("/availableGates", (req, res) -> gateProvider.getAvailableGates());
-        post("/gate", (req, res) -> gateProvider.selectGate(new Gate(Integer.valueOf(req.queryParams("number")))));
+        post("/gate", (req, res) -> {
+            
+            boolean wasAvailable = gateProvider.selectGate(new Gate(Integer.valueOf(req.queryParams("number"))));
+            if(wasAvailable) {
+                res.status(200);
+            } else {
+                res.status(400);
+            }
+            return res;
+        });
+        get("/selectedGate", (req, res) -> gateProvider.getSelectedGate().getNumber());
+        post("/freeGate", (req, res) -> gateProvider.selectGate(new Gate(Integer.valueOf(req.queryParams("number")))));
+
     }
-    
 }

@@ -5,12 +5,9 @@
  */
 package com.konorstolemybike.efb.main;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import spark.Response;
 
 /**
  *
@@ -20,12 +17,12 @@ public class GateProvider {
     
     private Gate selectedGate;
     
-    private final List<Gate> availableGates = IntStream
-            .range(1, 45)
+    private final Set<Gate> availableGates = IntStream
+            .range(1, 46)
             .mapToObj(i -> new Gate(i))
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     
-    public List<Gate> getAvailableGates() {
+    public Set<Gate> getAvailableGates() {
         return availableGates;
     }
     
@@ -36,6 +33,17 @@ public class GateProvider {
             availableGates.removeIf(g -> g.equals(gate));
             selectedGate = gate;
             return true;
+        }
+    }
+    
+    public Gate getSelectedGate() {
+        return selectedGate;
+    }
+    
+    public void freeGate(Gate gate) {
+        availableGates.add(gate);
+        if(selectedGate.equals(gate)){
+            selectedGate = null;
         }
     }
 }
