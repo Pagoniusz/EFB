@@ -37,9 +37,9 @@ public class Main {
         get("/hello", (req, res) -> "Hello");
         get("/availableGates", (req, res) -> gateProvider.getAvailableGates());
         post("/gate", (req, res) -> {
-            
+
             boolean wasAvailable = gateProvider.selectGate(new Gate(Integer.valueOf(req.queryParams("number"))));
-            if(wasAvailable) {
+            if (wasAvailable) {
                 res.status(200);
             } else {
                 res.status(400);
@@ -47,7 +47,9 @@ public class Main {
             return res;
         });
         get("/selectedGate", (req, res) -> gateProvider.getSelectedGate().getNumber());
-        post("/freeGate", (req, res) -> gateProvider.selectGate(new Gate(Integer.valueOf(req.queryParams("number")))));
-
+        post("/freeGate", (req, res) -> {
+            gateProvider.freeGate(new Gate(Integer.valueOf(req.queryParams("number"))));
+            return res;
+        });
     }
 }
